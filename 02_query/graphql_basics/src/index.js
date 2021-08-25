@@ -46,11 +46,19 @@ const posts = [
   },
 ];
 
+const comments = [
+  { id: '1', text: 'text 1' },
+  { id: '2', text: 'text 2' },
+  { id: '3', text: 'text 3' },
+  { id: '4', text: 'text 4' },
+];
+
 // Type Definition (Schema)
 const typeDefs = `
     type Query {
       users(query: String): [User!]!
       posts(query: String): [Post!]!
+      comments: [Comment!]!
       me: User!
       post: Post!
     }
@@ -69,6 +77,11 @@ const typeDefs = `
       body: String!
       published: Boolean!
       author: User!
+    }
+
+    type Comment {
+      id: ID!
+      text: String!
     }
 `;
 
@@ -102,6 +115,9 @@ const resolvers = {
 
         return isTitleMatch || isBodyMatch;
       });
+    },
+    comments(parent, args, ctx, info) {
+      return comments;
     },
     me() {
       return {
