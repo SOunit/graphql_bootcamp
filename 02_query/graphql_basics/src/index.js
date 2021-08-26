@@ -2,60 +2,11 @@ import { GraphQLServer } from 'graphql-yoga';
 import uuidv4 from 'uuid/v4';
 
 // Dummy data
-const users = [
-  {
-    id: '1',
-    name: 'Jack Pearson',
-    email: 'jack@example.com',
-    age: 38,
-  },
-  {
-    id: '2',
-    name: 'rebecca Pearson',
-    email: 'rebecca@example.com',
-    age: 38,
-  },
-  {
-    id: '3',
-    name: 'kevin Pearson',
-    email: 'kevin@example.com',
-    age: 14,
-  },
-];
+const users = [];
 
-const posts = [
-  {
-    id: '1',
-    title: 'title 1',
-    body: 'body 1',
-    published: true,
-    author: '1',
-    comments: ['1', '4'],
-  },
-  {
-    id: '2',
-    title: 'title 2',
-    body: 'body 2',
-    published: true,
-    author: '1',
-    comments: ['2'],
-  },
-  {
-    id: '3',
-    title: 'title 3',
-    body: 'body 3',
-    published: true,
-    author: '2',
-    comments: ['3'],
-  },
-];
+const posts = [];
 
-const comments = [
-  { id: '1', text: 'text 1', author: '1', post: '1' },
-  { id: '2', text: 'text 2', author: '1', post: '2' },
-  { id: '3', text: 'text 3', author: '2', post: '3' },
-  { id: '4', text: 'text 4', author: '2', post: '1' },
-];
+const comments = [];
 
 // Type Definition (Schema)
 const typeDefs = `
@@ -69,6 +20,8 @@ const typeDefs = `
 
     type Mutation {
       createUser(name: String!, email: String!, age: Int): User!
+      createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
+      createComment(text: String!, author: ID!, post: ID!): Comment!
     }
 
     type User {
@@ -166,6 +119,43 @@ const resolvers = {
       users.push(user);
 
       return user;
+    },
+    createPost(parent, args, ctx, info) {
+      const userExists = users.some((user) => user.id === args.author);
+      if (!userExists) {
+        throw new Error('User not found');
+      }
+
+      const post = {
+        id: uuidv4(),
+        title: args.title,
+        body: args.body,
+        published: args.published,
+        author: args.author,
+      };
+
+      posts.push(post);
+
+      return post;
+    },
+    createComment(parent, args, ctx, info) {
+      const userExists = users.some((user) => user.id === args.author);
+      const postExists = posts.some(
+        (post) => post.id === args.post && post.published
+      );
+      if (!userExists || !postExists) {
+        throw new Error('unable to find user and post');
+      }
+
+      const comment = {
+        id: uuidv4(),
+        text: args.text,
+        author: args.author,
+        post: args.post,
+      };
+      comments.push(comment);
+
+      return comment;
     },
   },
   Post: {
