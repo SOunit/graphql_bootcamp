@@ -29,6 +29,7 @@ const posts = [
     body: 'body 1',
     published: true,
     author: '1',
+    comments: ['1', '4'],
   },
   {
     id: '2',
@@ -36,6 +37,7 @@ const posts = [
     body: 'body 2',
     published: true,
     author: '1',
+    comments: ['2'],
   },
   {
     id: '3',
@@ -43,14 +45,15 @@ const posts = [
     body: 'body 3',
     published: true,
     author: '2',
+    comments: ['3'],
   },
 ];
 
 const comments = [
-  { id: '1', text: 'text 1', author: '1' },
-  { id: '2', text: 'text 2', author: '1' },
-  { id: '3', text: 'text 3', author: '2' },
-  { id: '4', text: 'text 4', author: '2' },
+  { id: '1', text: 'text 1', author: '1', post: '1' },
+  { id: '2', text: 'text 2', author: '1', post: '2' },
+  { id: '3', text: 'text 3', author: '2', post: '3' },
+  { id: '4', text: 'text 4', author: '2', post: '1' },
 ];
 
 // Type Definition (Schema)
@@ -78,12 +81,14 @@ const typeDefs = `
       body: String!
       published: Boolean!
       author: User!
+      comments: [Comment!]!
     }
 
     type Comment {
       id: ID!
       text: String!
       author: User!
+      post: Post!
     }
 `;
 
@@ -145,6 +150,11 @@ const resolvers = {
       });
       return result;
     },
+    comments(parent, args, ctx, info) {
+      return comments.filter((comment) => {
+        return comment.post === parent.id;
+      });
+    },
   },
   User: {
     posts(parent, args, ctx, info) {
@@ -162,6 +172,11 @@ const resolvers = {
     author(parent, args, ctx, info) {
       return users.find((user) => {
         return parent.author === user.id;
+      });
+    },
+    post(parent, args, ctx, info) {
+      return posts.find((post) => {
+        return post.id === parent.post;
       });
     },
   },
