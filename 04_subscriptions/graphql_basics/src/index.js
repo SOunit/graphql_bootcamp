@@ -1,10 +1,13 @@
-import { GraphQLServer } from 'graphql-yoga';
+import { GraphQLServer, PubSub } from 'graphql-yoga';
 import db from './db';
 import Query from './resolvers/Query';
 import Mutation from './resolvers/Mutation';
+import Subscription from './resolvers/Subscription';
 import Post from './resolvers/Post';
 import User from './resolvers/User';
 import Comment from './resolvers/Comment';
+
+const pubsub = new PubSub();
 
 const server = new GraphQLServer({
   // relative path from root directory
@@ -12,11 +15,12 @@ const server = new GraphQLServer({
   resolvers: {
     Query,
     Mutation,
+    Subscription,
     Post,
     User,
     Comment,
   },
-  context: { db },
+  context: { db, pubsub },
 });
 
 // default port: 4000
