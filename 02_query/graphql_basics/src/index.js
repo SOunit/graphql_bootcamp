@@ -2,11 +2,21 @@ import { GraphQLServer } from 'graphql-yoga';
 import uuidv4 from 'uuid/v4';
 
 // Dummy data
-const users = [];
+const users = [
+  {
+    id: '1',
+    name: 'Jack',
+    email: 'jack@sample.com',
+    posts: ['10'],
+    comments: ['100'],
+  },
+];
 
-const posts = [];
+const posts = [
+  { id: '10', title: 'title', author: '1', published: true, comments: [] },
+];
 
-const comments = [];
+const comments = [{ id: '100', text: 'text', author: '1', post: '10' }];
 
 // Type Definition (Schema)
 const typeDefs = `
@@ -109,12 +119,8 @@ const resolvers = {
       }
 
       const user = {
+        ...args,
         id: uuidv4(),
-        name: args.name,
-        email: args.email,
-        age: args.age,
-        posts: [],
-        comments: [],
       };
       users.push(user);
 
@@ -127,11 +133,8 @@ const resolvers = {
       }
 
       const post = {
+        ...args,
         id: uuidv4(),
-        title: args.title,
-        body: args.body,
-        published: args.published,
-        author: args.author,
       };
 
       posts.push(post);
@@ -148,10 +151,8 @@ const resolvers = {
       }
 
       const comment = {
+        ...args,
         id: uuidv4(),
-        text: args.text,
-        author: args.author,
-        post: args.post,
       };
       comments.push(comment);
 
