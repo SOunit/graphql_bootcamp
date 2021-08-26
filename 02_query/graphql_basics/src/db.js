@@ -17,8 +17,22 @@ const users = [
 ];
 
 const posts = [
-  { id: '10', title: 'title', author: '1', published: true, comments: [] },
-  { id: '20', title: 'title', author: '2', published: true, comments: [] },
+  {
+    id: '10',
+    title: 'title',
+    body: 'body',
+    author: '1',
+    published: true,
+    comments: [],
+  },
+  {
+    id: '20',
+    title: 'title',
+    body: 'body',
+    author: '2',
+    published: true,
+    comments: [],
+  },
 ];
 
 const comments = [
