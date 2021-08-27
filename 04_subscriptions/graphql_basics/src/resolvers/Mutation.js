@@ -180,7 +180,10 @@ const Mutation = {
     db.comments.push(comment);
 
     pubsub.publish(`comment ${args.data.post}`, {
-      comment,
+      comment: {
+        mutation: 'CREATED',
+        data: comment,
+      },
     });
 
     return comment;
