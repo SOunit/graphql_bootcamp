@@ -30,7 +30,7 @@ const posts = [
     title: 'title',
     body: 'body',
     author: '2',
-    published: true,
+    published: false,
     comments: [],
   },
 ];
